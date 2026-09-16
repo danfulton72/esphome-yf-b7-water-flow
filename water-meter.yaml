@@ -2,6 +2,12 @@ substitutions:
   device_name: water-meter
   friendly_name: "Water Meter"
 
+  # YF-B7 flow calibration.
+  # SmartHomeShop starting point: ~660 pulses/L = 1/660 L per pulse.
+  # Change this one value after calibration; it is used for both
+  # instantaneous flow and the cumulative water total.
+  flow_multiplier: "0.00151515"
+
 esphome:
   name: ${device_name}
   friendly_name: ${friendly_name}
@@ -52,7 +58,7 @@ sensor:
     icon: "mdi:water-pump"
     state_class: measurement
     filters:
-      - multiply: 0.00151515
+      - multiply: ${flow_multiplier}
     total:
       id: water_total_l
       name: "Water Total"
@@ -62,7 +68,7 @@ sensor:
       device_class: water
       state_class: total_increasing
       filters:
-        - multiply: 0.00151515
+        - multiply: ${flow_multiplier}
 
   - platform: template
     name: "Water Total m³"
